@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head> 
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="conversor.css" media="screen">
+    <title>Conversor</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">
+          Conversor de moedas
+        </h1>
+        <p class="page-subtitle">
+          Descubra como está a conversão das moedas na atualidade
+        </p>
+        <img src="https://www.alura.com.br/assets/img/imersoes/dev-2021/logo-imersao-conversor-de-moedas.svg" class="page-logo" alt=""><br><br>
+        <label for="moeda">💵Insira o valor</label><br><br>
+        <input type="number" id="valor1" size="2" />
+        <select name="valor1" id="moeda1">
+          <option value="dolar">Dolar</option>
+          <option value="euro">Euro</option>
+          <option value="real">Real</option>
+        </select><br>
+        <input type="number" name="resultado" id="res" value="" />
+        <select name="resultado" id="moeda2">
+          <option value="dolar">Dolar</option>
+          <option value="euro">Euro</option>
+          <option value="real">Real</option>
+        </select><br>
+      
+        <button type="submit" onclick="Converter()">Converter</button>
+        <h2 id="valorConvertido"></h2>
+      </div>
+      <a href="https://alura.com.br/" target="_blank">
+        <img src="https://www.alura.com.br/assets/img/home/alura-logo.svg" alt="" class="alura-logo">
+</body>
+<script>
+    function faz_get(url) {
+    let request = new XMLHttpRequest()
+    request.open('GET', url, false)
+    request.send()
+    return request.responseText
+}
+
+// Verifica o valor do dólar em relação ao real
+data = faz_get('https://economia.awesomeapi.com.br/last/USD-BRL')
+let cotacaoDolarReal = parseFloat(data.substring(88, 94))
+
+// Verifica o valor do euro relação ao real
+data = faz_get('https://economia.awesomeapi.com.br/last/EUR-BRL')
+let cotacaoEuroReal = parseFloat(data.substring(77, 83))
+// Fim
+
+
+
+function Converter() {
+  var valorElemento = document.getElementById("valor1");
+  var valorElemento2 = document.getElementById("res");
+  var valorEmReal;
+  var moeda1 = document.getElementById("moeda1");
+  var moeda2 = document.getElementById("moeda2");
+  var valor1 = valorElemento.value;
+  var valor2 = valorElemento2.value;
+  var elementoValConv = document.getElementById("res");
+  var valorConvertido;
+  
+  //conversão do real para as demais moedas
+  if (moeda1.value == "real") {
+    if (moeda2.value == "dolar") {
+      valorConvertido = valor1 / cotacaoDolarReal;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else if (moeda2.value == "euro") {
+      valorConvertido = valor1 / cotacaoEuroReal;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else {
+      valorConvertido = valor1;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    }
+  }
+  
+  //conversão do dolar para as demais moedas
+  if (moeda1.value == "dolar") { 
+    if (moeda2.value == "real") {
+      valorConvertido = valor1 * cotacaoDolarReal;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else if (moeda2.value == "euro") {
+      valorConvertido = valor1 * 0.85;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else {
+      valorConvertido = valor1;
+      elementoValConv.value = valorConvertido;
+    }
+  }
+  
+  //conversão do euro para as demais moedas
+  if (moeda1.value == "euro") {
+    if (moeda2.value == "dolar") {
+      valorConvertido = valor1 / 0.85;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else if (moeda2.value == "real") {
+      valorConvertido = valor1 * cotacaoEuroReal;
+      elementoValConv.value = valorConvertido.toFixed(2);
+    } else {
+      valorConvertido = valor1;
+      elementoValConv.value = valorConvertido;
+    }
+  }
+}
+
+</script>
+</html>
